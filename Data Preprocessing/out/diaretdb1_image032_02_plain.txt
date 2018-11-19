@@ -1,0 +1,6 @@
+coords2d,380,471
+coords2d,428,504
+markingtype,Disc
+coords2d,409,597
+coords2d,406,600
+markingtype,Haemorrhages

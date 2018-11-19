@@ -1,0 +1,3 @@
+coords2d,740,635
+coords2d,744,663
+markingtype,Fundus_area

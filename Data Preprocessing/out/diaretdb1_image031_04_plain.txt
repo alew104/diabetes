@@ -1,0 +1,3 @@
+coords2d,978,570
+coords2d,1028,578
+markingtype,Disc

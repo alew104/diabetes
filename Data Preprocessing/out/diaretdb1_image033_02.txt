@@ -1,0 +1,6 @@
+coords2d,1142,509
+coords2d,1096,496
+markingtype,Disc
+coords2d,201,438
+coords2d,199,441
+markingtype,Soft_exudates

@@ -1,0 +1,15 @@
+coords2d,858,818
+coords2d,858,818
+markingtype,Red_small_dots
+coords2d,1014,272
+coords2d,1014,272
+markingtype,Red_small_dots
+coords2d,933,66
+coords2d,934,89
+markingtype,IRMA
+coords2d,565,106
+coords2d,565,106
+markingtype,Red_small_dots
+coords2d,810,552
+coords2d,810,552
+markingtype,Red_small_dots

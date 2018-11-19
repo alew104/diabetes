@@ -1,0 +1,15 @@
+coords2d,967,531
+coords2d,967,533
+markingtype,Haemorrhages
+coords2d,719,775
+coords2d,718,778
+markingtype,Haemorrhages
+coords2d,960,561
+coords2d,960,561
+markingtype,Red_small_dots
+coords2d,680,974
+coords2d,681,975
+markingtype,Haemorrhages
+coords2d,864,988
+coords2d,864,988
+markingtype,Red_small_dots

@@ -1,0 +1,9 @@
+coords2d,216,854
+coords2d,216,854
+markingtype,Red_small_dots
+coords2d,718,570
+coords2d,717,570
+markingtype,Hard_exudates
+coords2d,156,553
+coords2d,156,553
+markingtype,Red_small_dots

@@ -1,0 +1,12 @@
+coords2d,1225,643
+coords2d,1202,620
+markingtype,Disc
+coords2d,885,259
+coords2d,883,255
+markingtype,Red_small_dots
+coords2d,960,562
+coords2d,960,560
+markingtype,Red_small_dots
+coords2d,743,251
+coords2d,737,263
+markingtype,Hard_exudates

@@ -1,0 +1,9 @@
+coords2d,484,126
+coords2d,484,126
+markingtype,Red_small_dots
+coords2d,831,553
+coords2d,831,553
+markingtype,Red_small_dots
+coords2d,961,625
+coords2d,961,625
+markingtype,Red_small_dots

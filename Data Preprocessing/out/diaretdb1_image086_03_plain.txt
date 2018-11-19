@@ -1,0 +1,12 @@
+coords2d,1111,591
+coords2d,1096,636
+markingtype,Disc
+coords2d,810,705
+coords2d,803,705
+markingtype,Hard_exudates
+coords2d,721,777
+coords2d,721,774
+markingtype,Haemorrhages
+coords2d,678,968
+coords2d,678,973
+markingtype,Haemorrhages

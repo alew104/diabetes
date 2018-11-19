@@ -1,0 +1,9 @@
+coords2d,400,692
+coords2d,446,708
+markingtype,Disc
+coords2d,866,697
+coords2d,866,698
+markingtype,Red_small_dots
+coords2d,585,796
+coords2d,584,795
+markingtype,Red_small_dots
