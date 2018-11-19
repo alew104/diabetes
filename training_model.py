@@ -37,9 +37,9 @@ layers = 'VGG19'
 #path to weights
 weights_path = 'vgg19_weights_tf_dim_ordering_tf_kernels_notop.h5'
 
-train_data_dir = '/' + model + '/training/'
-validation_data_dir = '/' + model + '/validation/'
-test_data_dir = '/' + model + '/testing/'
+train_data_dir = model + '/training/'
+validation_data_dir = model + '/validation/'
+test_data_dir = model + '/testing/'
 
 epochs = 50
 batch_size = 16
@@ -51,45 +51,45 @@ num_classes = 2
 #begin vgg19 model
 model = Sequential()
 model.add(ZeroPadding2D((1, 1), input_shape=input_shape))
-model.add(Conv2D(64, 3, 3, activation='relu'))
+model.add(Conv2D(64, (3, 3), activation='relu'))
 model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(64, 3, 3, activation='relu'))
+model.add(Conv2D(64, (3, 3), activation='relu'))
 model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
 model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(128, 3, 3, activation='relu'))
+model.add(Conv2D(128, (3, 3), activation='relu'))
 model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(128, 3, 3, activation='relu'))
+model.add(Conv2D(128, (3, 3), activation='relu'))
 model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
 model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(256, 3, 3, activation='relu'))
+model.add(Conv2D(256, (3, 3), activation='relu'))
 model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(256, 3, 3, activation='relu'))
+model.add(Conv2D(256, (3, 3), activation='relu'))
 model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(256, 3, 3, activation='relu'))
+model.add(Conv2D(256, (3, 3), activation='relu'))
 model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(256, 3, 3, activation='relu'))
+model.add(Conv2D(256, (3, 3), activation='relu'))
 model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
 model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(512, 3, 3, activation='relu'))
+model.add(Conv2D(512, (3, 3), activation='relu'))
 model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(512, 3, 3, activation='relu'))
+model.add(Conv2D(512, (3, 3), activation='relu'))
 model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(512, 3, 3, activation='relu'))
+model.add(Conv2D(512, (3, 3), activation='relu'))
 model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(512, 3, 3, activation='relu'))
+model.add(Conv2D(512, (3, 3), activation='relu'))
 model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
 model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(512, 3, 3, activation='relu'))
+model.add(Conv2D(512, (3, 3), activation='relu'))
 model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(512, 3, 3, activation='relu'))
+model.add(Conv2D(512, (3, 3), activation='relu'))
 model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(512, 3, 3, activation='relu'))
+model.add(Conv2D(512, (3, 3), activation='relu'))
 model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(512, 3, 3, activation='relu'))
+model.add(Conv2D(512, (3, 3), activation='relu'))
 model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
 model.add(Flatten())
@@ -101,7 +101,25 @@ model.load_weights(weights_path)
 model.add(Dense(num_classes, activation='softmax'))
 
 # freeze certain layers
-#model.layers[0].trainable = False
+model.layers[0].trainable = False
+model.layers[1].trainable = False
+model.layers[2].trainable = False
+model.layers[3].trainable = False
+model.layers[4].trainable = False
+model.layers[5].trainable = False
+model.layers[6].trainable = True
+model.layers[7].trainable = True
+model.layers[8].trainable = True
+model.layers[9].trainable = True
+model.layers[10].trainable = True
+model.layers[11].trainable = True
+model.layers[12].trainable = True
+model.layers[13].trainable = True
+model.layers[14].trainable = True
+model.layers[15].trainable = True
+
+# classifier layer
+model.layers[16].trainable = True
 
 # Compile Model
 model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
@@ -146,6 +164,8 @@ history_obj = model.fit_generator(
             validation_steps=2)
 
 
+model.save_weights('saved_weights/' + layers + '.h5')
+
 # configure batch size and retrieve one batch of images
 for X_batch, y_batch in train_generator:
 	# create a grid of 3x3 images
@@ -157,5 +177,3 @@ for X_batch, y_batch in train_generator:
 
 plot_loss(history_obj.history['loss'], history_obj.history['val_loss'])
 plot_acc(history_obj.history['acc'], history_obj.history['val_acc'])
-
-model.save_weights('/saved_weights/' + layers + '.h5')
