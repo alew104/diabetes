@@ -2,6 +2,7 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D, ZeroPadding2D
 from keras.layers import Activation, Dropout, Flatten, Dense
+from keras import optimizers
 from matplotlib import pyplot as plt
 
 # To plot both training and testing cost/loss ratio
@@ -107,9 +108,9 @@ model.layers[2].trainable = False
 model.layers[3].trainable = False
 model.layers[4].trainable = False
 model.layers[5].trainable = False
-model.layers[6].trainable = True
-model.layers[7].trainable = True
-model.layers[8].trainable = True
+model.layers[6].trainable = False
+model.layers[7].trainable = False
+model.layers[8].trainable = False
 model.layers[9].trainable = True
 model.layers[10].trainable = True
 model.layers[11].trainable = True
@@ -122,7 +123,8 @@ model.layers[15].trainable = True
 model.layers[16].trainable = True
 
 # Compile Model
-model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
+adam = optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=True)
+model.compile(optimizer=adam, loss='categorical_crossentropy', metrics=['accuracy'])
 
 # show the model summary
 model.summary()
