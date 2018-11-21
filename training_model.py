@@ -1,8 +1,9 @@
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D, ZeroPadding2D
-from keras.layers import Activation, Dropout, Flatten, Dense
-from keras import optimizers
+from keras.layers import Activation, Dropout, Flatten, Dense, Input
+from keras import optimizers, models
+from keras.applications import VGG19
 from matplotlib import pyplot as plt
 
 # To plot both training and testing cost/loss ratio
@@ -31,11 +32,11 @@ def plot_acc(train_acc, valid_acc):
 # dimensions of our images, 224x224 for VGG19
 img_width, img_height = 224, 224
 
-#directory data
+# directory data
 model = 'VGG19'
-#output h5
+# output h5
 layers = 'VGG19'
-#path to weights
+# path to weights
 weights_path = 'vgg19_weights_tf_dim_ordering_tf_kernels_notop.h5'
 
 train_data_dir = model + '/training/'
@@ -45,60 +46,115 @@ test_data_dir = model + '/testing/'
 epochs = 50
 batch_size = 16
 input_shape = (img_width, img_height, 3)
-#two classes: hemorrages or no hemorrhages
+# two classes: hemorrages or no hemorrhages
 num_classes = 2
 
 
-#begin vgg19 model
+# keras vgg 19
+# model = Sequential()
+# model.add(VGG19(include_top=False, pooling='avg', weights='imagenet', input_shape=input_shape))
+# model.layers[0].trainable = False
+
+# begin vgg19 model
 model = Sequential()
-model.add(ZeroPadding2D((1, 1), input_shape=input_shape))
-model.add(Conv2D(64, (3, 3), activation='relu'))
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(64, (3, 3), activation='relu'))
-model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+model.add(Conv2D(64, (3, 3),
+                      activation='relu',
+                      padding='same',
+                      name='block1_conv1',
+                      input_shape=input_shape))
 
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(128, (3, 3), activation='relu'))
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(128, (3, 3), activation='relu'))
-model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+model.add(Conv2D(64, (3, 3),
+                  activation='relu',
+                  padding='same',
+                  name='block1_conv2'))
 
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(256, (3, 3), activation='relu'))
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(256, (3, 3), activation='relu'))
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(256, (3, 3), activation='relu'))
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(256, (3, 3), activation='relu'))
-model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+model.add(MaxPooling2D((2, 2), strides=(2, 2), name='block1_pool'))
 
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(512, (3, 3), activation='relu'))
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(512, (3, 3), activation='relu'))
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(512, (3, 3), activation='relu'))
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(512, (3, 3), activation='relu'))
-model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+model.add(Conv2D(128, (3, 3),
+                  activation='relu',
+                  padding='same',
+                  name='block2_conv1'))
 
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(512, (3, 3), activation='relu'))
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(512, (3, 3), activation='relu'))
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(512, (3, 3), activation='relu'))
-model.add(ZeroPadding2D((1, 1)))
-model.add(Conv2D(512, (3, 3), activation='relu'))
-model.add(MaxPooling2D((2, 2), strides=(2, 2)))
+model.add(Conv2D(128, (3, 3),
+                  activation='relu',
+                  padding='same',
+                  name='block2_conv2'))
+
+model.add(MaxPooling2D((2, 2), strides=(2, 2), name='block2_pool'))
+
+model.add(Conv2D(256, (3, 3),
+                  activation='relu',
+                  padding='same',
+                  name='block3_conv1'))
+
+model.add(Conv2D(256, (3, 3),
+                  activation='relu',
+                  padding='same',
+                  name='block3_conv2'))
+
+model.add(Conv2D(256, (3, 3),
+                  activation='relu',
+                  padding='same',
+                  name='block3_conv3'))
+
+model.add(Conv2D(256, (3, 3),
+                  activation='relu',
+                  padding='same',
+                  name='block3_conv4'))
+
+model.add(MaxPooling2D((2, 2), strides=(2, 2), name='block3_pool'))
+
+model.add(Conv2D(512, (3, 3),
+                  activation='relu',
+                  padding='same',
+                  name='block4_conv1'))
+
+model.add(Conv2D(512, (3, 3),
+                  activation='relu',
+                  padding='same',
+                  name='block4_conv2'))
+
+model.add(Conv2D(512, (3, 3),
+                  activation='relu',
+                  padding='same',
+                  name='block4_conv3'))
+
+model.add(Conv2D(512, (3, 3),
+                  activation='relu',
+                  padding='same',
+                  name='block4_conv4'))
+
+model.add(MaxPooling2D((2, 2), strides=(2, 2), name='block4_pool'))
+
+model.add(Conv2D(512, (3, 3),
+                  activation='relu',
+                  padding='same',
+                  name='block5_conv1'))
+
+model.add(Conv2D(512, (3, 3),
+                  activation='relu',
+                  padding='same',
+                  name='block5_conv2'))
+
+model.add(Conv2D(512, (3, 3),
+                  activation='relu',
+                  padding='same',
+                  name='block5_conv3'))
+
+
+model.add(Conv2D(512, (3, 3),
+                  activation='relu',
+                  padding='same',
+                  name='block5_conv4'))
+
+model.add(MaxPooling2D((2, 2), strides=(2, 2), name='block5_pool'))
 
 model.add(Flatten())
 
 # load weights of vgg19 no_top
 model.load_weights(weights_path)
 
-# add classifying layer
+# classifying layer
 model.add(Dense(num_classes, activation='softmax'))
 
 # freeze certain layers
@@ -111,15 +167,13 @@ model.layers[5].trainable = False
 model.layers[6].trainable = False
 model.layers[7].trainable = False
 model.layers[8].trainable = False
-model.layers[9].trainable = True
-model.layers[10].trainable = True
-model.layers[11].trainable = True
-model.layers[12].trainable = True
-model.layers[13].trainable = True
-model.layers[14].trainable = True
-model.layers[15].trainable = True
-
-# classifier layer
+model.layers[9].trainable = False
+model.layers[10].trainable = False
+model.layers[11].trainable = False
+model.layers[12].trainable = False
+model.layers[13].trainable = False
+model.layers[14].trainable = False
+model.layers[15].trainable = False
 model.layers[16].trainable = True
 
 # Compile Model
@@ -165,17 +219,8 @@ history_obj = model.fit_generator(
             validation_data=validation_generator,
             validation_steps=2)
 
-
+model.save('saved_models/' + layers + '.h5')
 model.save_weights('saved_weights/' + layers + '.h5')
-
-# configure batch size and retrieve one batch of images
-for X_batch, y_batch in train_generator:
-	# create a grid of 3x3 images
-	for i in range(0, 9):
-		plt.subplot(330 + 1 + i)
-		plt.imshow(X_batch[i].reshape(224, 224), cmap=plt.get_cmap('gray'))
-	# show the plot
-	plt.show()
 
 plot_loss(history_obj.history['loss'], history_obj.history['val_loss'])
 plot_acc(history_obj.history['acc'], history_obj.history['val_acc'])
