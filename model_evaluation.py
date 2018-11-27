@@ -1,11 +1,12 @@
 # Modify 'test1.jpg' and 'test2.jpg' to the images you want to predict on
 
 from keras.models import load_model
+from keras import optimizers, models
 from keras.preprocessing import image
 import numpy as np
 import sys
 
-def run(image):
+def run(image_name):
     # dimensions of our images
     img_width, img_height = 224, 224
 
@@ -13,7 +14,7 @@ def run(image):
     model = 'VGG19'
 
     # model weights
-    weights_path = "saved_weights/VGG19.h5"
+    weights_path = "saved_models/VGG19.h5"
 
     # testing data directory
     test_data_dir = model + '/testing/'
@@ -24,14 +25,25 @@ def run(image):
     model.compile(optimizer=adam, loss='categorical_crossentropy', metrics=['accuracy'])
 
     # predicting images
-    img = image.load_img(test_data_dir + image, target_size=(img_width, img_height))
+    img = image.load_img(image_name, target_size=(img_width, img_height))
     x = image.img_to_array(img)
     x = np.expand_dims(x, axis=0)
 
     images = np.vstack([x])
     classes = model.predict_classes(images, batch_size=10)
-    print classes
 
+    if (classes[0] == 0):
+        print "\n"
+        print image_name
+        print "hemorrhage detected"
+        print "\n"
+    elif (classes[0] == 1):
+        print "\n"
+        print image_name
+        print "no hemorrhage detected"
+        print "\n"
+
+    #print classes
     # predicting multiple images at once
     #img = image.load_img('test2.jpg', target_size=(img_width, img_height))
     #y = image.img_to_array(img)
@@ -42,9 +54,9 @@ def run(image):
     #classes = model.predict_classes(images, batch_size=10)
 
     # print the classes, the images belong to
-    print classes
-    print classes[0]
-    print classes[0][0]
+    #print classes
+    #print classes[0]
+    #print classes[0][0]
 
 def main(image):
     run(image)

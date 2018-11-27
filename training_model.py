@@ -2,7 +2,7 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D, ZeroPadding2D
 from keras.layers import Activation, Dropout, Flatten, Dense, Input
-from keras import optimizers, models
+from keras import optimizers, models, Model
 from keras.applications import VGG19
 from matplotlib import pyplot as plt
 
@@ -49,6 +49,8 @@ input_shape = (img_width, img_height, 3)
 # two classes: hemorrages or no hemorrhages
 num_classes = 2
 
+input = Input(shape=input_shape)
+
 
 # keras vgg 19
 # model = Sequential()
@@ -56,125 +58,180 @@ num_classes = 2
 # model.layers[0].trainable = False
 
 # begin vgg19 model
-model = Sequential()
-model.add(Conv2D(64, (3, 3),
-                      activation='relu',
-                      padding='same',
-                      name='block1_conv1',
-                      input_shape=input_shape))
+# model = Sequential()
+# model.add(Conv2D(64, (3, 3),
+#                       activation='relu',
+#                       padding='same',
+#                       name='block1_conv1',
+#                       input_shape=input_shape))
+#
+# model.add(Conv2D(64, (3, 3),
+#                   activation='relu',
+#                   padding='same',
+#                   name='block1_conv2'))
+#
+# model.add(MaxPooling2D((2, 2), strides=(2, 2), name='block1_pool'))
+#
+# model.add(Conv2D(128, (3, 3),
+#                   activation='relu',
+#                   padding='same',
+#                   name='block2_conv1'))
+#
+# model.add(Conv2D(128, (3, 3),
+#                   activation='relu',
+#                   padding='same',
+#                   name='block2_conv2'))
+#
+# model.add(MaxPooling2D((2, 2), strides=(2, 2), name='block2_pool'))
+#
+# model.add(Conv2D(256, (3, 3),
+#                   activation='relu',
+#                   padding='same',
+#                   name='block3_conv1'))
+#
+# model.add(Conv2D(256, (3, 3),
+#                   activation='relu',
+#                   padding='same',
+#                   name='block3_conv2'))
+#
+# model.add(Conv2D(256, (3, 3),
+#                   activation='relu',
+#                   padding='same',
+#                   name='block3_conv3'))
+#
+# model.add(Conv2D(256, (3, 3),
+#                   activation='relu',
+#                   padding='same',
+#                   name='block3_conv4'))
+#
+# model.add(MaxPooling2D((2, 2), strides=(2, 2), name='block3_pool'))
+#
+# model.add(Conv2D(512, (3, 3),
+#                   activation='relu',
+#                   padding='same',
+#                   name='block4_conv1'))
+#
+# model.add(Conv2D(512, (3, 3),
+#                   activation='relu',
+#                   padding='same',
+#                   name='block4_conv2'))
+#
+# model.add(Conv2D(512, (3, 3),
+#                   activation='relu',
+#                   padding='same',
+#                   name='block4_conv3'))
+#
+# model.add(Conv2D(512, (3, 3),
+#                   activation='relu',
+#                   padding='same',
+#                   name='block4_conv4'))
+#
+# model.add(MaxPooling2D((2, 2), strides=(2, 2), name='block4_pool'))
+#
+# model.add(Conv2D(512, (3, 3),
+#                   activation='relu',
+#                   padding='same',
+#                   name='block5_conv1'))
+#
+# model.add(Conv2D(512, (3, 3),
+#                   activation='relu',
+#                   padding='same',
+#                   name='block5_conv2'))
+#
+# model.add(Conv2D(512, (3, 3),
+#                   activation='relu',
+#                   padding='same',
+#                   name='block5_conv3'))
+#
+#
+# model.add(Conv2D(512, (3, 3),
+#                   activation='relu',
+#                   padding='same',
+#                   name='block5_conv4'))
+#
+# model.add(MaxPooling2D((2, 2), strides=(2, 2), name='block5_pool'))
+#
+# model.add(Flatten())
 
-model.add(Conv2D(64, (3, 3),
-                  activation='relu',
-                  padding='same',
-                  name='block1_conv2'))
 
-model.add(MaxPooling2D((2, 2), strides=(2, 2), name='block1_pool'))
+# Block 1
+x = Conv2D(64, (3, 3), activation='relu', padding='same', name='block1_conv1')(input)
+x = Conv2D(64, (3, 3), activation='relu', padding='same', name='block1_conv2')(x)
+x = MaxPooling2D((2, 2), strides=(2, 2), name='block1_pool')(x)
 
-model.add(Conv2D(128, (3, 3),
-                  activation='relu',
-                  padding='same',
-                  name='block2_conv1'))
+# Block 2
+x = Conv2D(128, (3, 3), activation='relu', padding='same', name='block2_conv1')(x)
+x = Conv2D(128, (3, 3), activation='relu', padding='same', name='block2_conv2')(x)
+x = MaxPooling2D((2, 2), strides=(2, 2), name='block2_pool')(x)
 
-model.add(Conv2D(128, (3, 3),
-                  activation='relu',
-                  padding='same',
-                  name='block2_conv2'))
+# Block 3
+x = Conv2D(256, (3, 3), activation='relu', padding='same', name='block3_conv1')(x)
+x = Conv2D(256, (3, 3), activation='relu', padding='same', name='block3_conv2')(x)
+x = Conv2D(256, (3, 3), activation='relu', padding='same', name='block3_conv3')(x)
+x = Conv2D(256, (3, 3), activation='relu', padding='same', name='block3_conv4')(x)
+x = MaxPooling2D((2, 2), strides=(2, 2), name='block3_pool')(x)
 
-model.add(MaxPooling2D((2, 2), strides=(2, 2), name='block2_pool'))
+# Block 4
+x = Conv2D(512, (3, 3), activation='relu', padding='same', name='block4_conv1')(x)
+x = Conv2D(512, (3, 3), activation='relu', padding='same', name='block4_conv2')(x)
+x = Conv2D(512, (3, 3), activation='relu', padding='same', name='block4_conv3')(x)
+x = Conv2D(512, (3, 3), activation='relu', padding='same', name='block4_conv4')(x)
+x = MaxPooling2D((2, 2), strides=(2, 2), name='block4_pool')(x)
 
-model.add(Conv2D(256, (3, 3),
-                  activation='relu',
-                  padding='same',
-                  name='block3_conv1'))
+# Block 5
+x = Conv2D(512, (3, 3), activation='relu', padding='same', name='block5_conv1')(x)
+x = Conv2D(512, (3, 3), activation='relu', padding='same', name='block5_conv2')(x)
+x = Conv2D(512, (3, 3), activation='relu', padding='same', name='block5_conv3')(x)
+x = Conv2D(512, (3, 3), activation='relu', padding='same', name='block5_conv4')(x)
+x = MaxPooling2D((2, 2), strides=(2, 2), name='block5_pool')(x)
 
-model.add(Conv2D(256, (3, 3),
-                  activation='relu',
-                  padding='same',
-                  name='block3_conv2'))
-
-model.add(Conv2D(256, (3, 3),
-                  activation='relu',
-                  padding='same',
-                  name='block3_conv3'))
-
-model.add(Conv2D(256, (3, 3),
-                  activation='relu',
-                  padding='same',
-                  name='block3_conv4'))
-
-model.add(MaxPooling2D((2, 2), strides=(2, 2), name='block3_pool'))
-
-model.add(Conv2D(512, (3, 3),
-                  activation='relu',
-                  padding='same',
-                  name='block4_conv1'))
-
-model.add(Conv2D(512, (3, 3),
-                  activation='relu',
-                  padding='same',
-                  name='block4_conv2'))
-
-model.add(Conv2D(512, (3, 3),
-                  activation='relu',
-                  padding='same',
-                  name='block4_conv3'))
-
-model.add(Conv2D(512, (3, 3),
-                  activation='relu',
-                  padding='same',
-                  name='block4_conv4'))
-
-model.add(MaxPooling2D((2, 2), strides=(2, 2), name='block4_pool'))
-
-model.add(Conv2D(512, (3, 3),
-                  activation='relu',
-                  padding='same',
-                  name='block5_conv1'))
-
-model.add(Conv2D(512, (3, 3),
-                  activation='relu',
-                  padding='same',
-                  name='block5_conv2'))
-
-model.add(Conv2D(512, (3, 3),
-                  activation='relu',
-                  padding='same',
-                  name='block5_conv3'))
-
-
-model.add(Conv2D(512, (3, 3),
-                  activation='relu',
-                  padding='same',
-                  name='block5_conv4'))
-
-model.add(MaxPooling2D((2, 2), strides=(2, 2), name='block5_pool'))
-
-model.add(Flatten())
+model = Model(input, x, name='vgg19')
 
 # load weights of vgg19 no_top
 model.load_weights(weights_path)
 
 # classifying layer
-model.add(Dense(num_classes, activation='softmax'))
+x = Dense(num_classes, activation='softmax')
+
+classifier = Model(model.get_layer('block5_pool').output, x, name='classify')
+#model.add(Dense(num_classes, activation='softmax'))
 
 # freeze certain layers
-model.layers[0].trainable = False
-model.layers[1].trainable = False
-model.layers[2].trainable = False
-model.layers[3].trainable = False
-model.layers[4].trainable = False
-model.layers[5].trainable = False
-model.layers[6].trainable = False
-model.layers[7].trainable = False
-model.layers[8].trainable = False
-model.layers[9].trainable = False
-model.layers[10].trainable = False
-model.layers[11].trainable = False
-model.layers[12].trainable = False
-model.layers[13].trainable = False
-model.layers[14].trainable = False
-model.layers[15].trainable = False
-model.layers[16].trainable = True
+# model.layers[0].trainable = False
+# model.layers[1].trainable = False
+# model.layers[2].trainable = False
+# model.layers[3].trainable = False
+# model.layers[4].trainable = False
+# model.layers[5].trainable = False
+# model.layers[6].trainable = False
+# model.layers[7].trainable = False
+# model.layers[8].trainable = False
+# model.layers[9].trainable = False
+# model.layers[10].trainable = False
+# model.layers[11].trainable = False
+# model.layers[12].trainable = False
+# model.layers[13].trainable = False
+# model.layers[14].trainable = False
+# model.layers[15].trainable = False
+# model.layers[16].trainable = True
+
+# model.layers[0].trainable = True
+# model.layers[1].trainable = True
+# model.layers[2].trainable = True
+# model.layers[3].trainable = True
+# model.layers[4].trainable = True
+# model.layers[5].trainable = True
+# model.layers[6].trainable = True
+# model.layers[7].trainable = True
+# model.layers[8].trainable = True
+# model.layers[9].trainable = True
+# model.layers[10].trainable = True
+# model.layers[11].trainable = True
+# model.layers[12].trainable = True
+# model.layers[13].trainable = True
+# model.layers[14].trainable = True
+# model.layers[15].trainable = True
+# model.layers[16].trainable = True
 
 # Compile Model
 adam = optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=True)
@@ -185,8 +242,7 @@ model.summary()
 
 # allow horizontal flipping and vertical flipping of training images
 train_datagen = ImageDataGenerator(
-    horizontal_flip=True,
-    vertical_flip=True)
+    horizontal_flip=True)
 
 # do nothing with validation/test data
 validation_datagen = ImageDataGenerator()
