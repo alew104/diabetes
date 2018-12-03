@@ -43,7 +43,7 @@ train_data_dir = model + '/training/'
 validation_data_dir = model + '/validation/'
 test_data_dir = model + '/testing/'
 
-epochs = 100
+epochs = 50
 batch_size = 32
 input_shape = (img_width, img_height, 3)
 # two classes: hemorrages or no hemorrhages
