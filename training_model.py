@@ -85,9 +85,10 @@ vgg19.get_layer('block5_conv4').trainable = True
 vgg19.get_layer('block5_pool').trainable = True
 
 x = vgg19.get_layer('block5_pool').output
-x = Flatten()(x)
-x = Dense(10, activation='softmax')(x)
-x = Dense(num_classes, activation='softmax')(x)
+x = Flatten(name='flatten')(x)
+x = Dense(4096, activation='relu')(x)
+x = Dense(4096, activation='relu')(x)
+x = Dense(num_classes, activation='softmax', name='prediction')(x)
 
 model = Model(vgg19.input, x)
 
