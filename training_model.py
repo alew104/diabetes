@@ -44,7 +44,7 @@ validation_data_dir = model + '/validation/'
 test_data_dir = model + '/testing/'
 
 epochs = 50
-batch_size = 16
+batch_size = 10
 input_shape = (img_width, img_height, 3)
 # two classes: hemorrages or no hemorrhages
 num_classes = 2
@@ -86,8 +86,8 @@ vgg19.get_layer('block5_pool').trainable = True
 
 x = vgg19.get_layer('block5_pool').output
 x = Flatten(name='flatten')(x)
-x = Dense(4096, activation='relu')(x)
-x = Dense(4096, activation='relu')(x)
+x = Dense(2048, activation='relu')(x)
+x = Dense(2048, activation='relu')(x)
 x = Dense(num_classes, activation='softmax', name='prediction')(x)
 
 model = Model(vgg19.input, x)
