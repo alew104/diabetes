@@ -69,8 +69,8 @@ vgg19.get_layer('block2_pool').trainable = False
 vgg19.get_layer('block3_conv1').trainable = False
 vgg19.get_layer('block3_conv2').trainable = False
 vgg19.get_layer('block3_conv3').trainable = False
-vgg19.get_layer('block3_conv4').trainable = False
-vgg19.get_layer('block3_pool').trainable = False
+vgg19.get_layer('block3_conv4').trainable = True
+vgg19.get_layer('block3_pool').trainable = True
 
 vgg19.get_layer('block4_conv1').trainable = True
 vgg19.get_layer('block4_conv2').trainable = True
@@ -92,7 +92,7 @@ x = Dense(num_classes, activation='softmax')(x)
 model = Model(vgg19.input, x)
 
 # Compile Model
-adam = optimizers.Adam(lr=0.1, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=True)
+adam = optimizers.Adam(lr=0.01, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=True)
 model.compile(optimizer=adam, loss='categorical_crossentropy', metrics=['accuracy'])
 
 # show the model summary
@@ -100,7 +100,8 @@ model.summary()
 
 # allow horizontal flipping and vertical flipping of training images
 train_datagen = ImageDataGenerator(
-    horizontal_flip=True)
+    horizontal_flip=True,
+    vertical_flip=True)
 
 # do nothing with validation/test data
 validation_datagen = ImageDataGenerator()
@@ -128,13 +129,12 @@ test_generator = test_datagen.flow_from_directory(
 
 history_obj = model.fit_generator(
             train_generator,
-            steps_per_epoch=10,
-            epochs=50,
+            steps_per_epoch=batch_size,
+            epochs=epochs,
             validation_data=validation_generator,
             validation_steps=2)
 
 model.save('saved_models/' + layers + '.h5')
-model.save_weights('saved_weights/' + layers + '.h5')
 
 plot_loss(history_obj.history['loss'], history_obj.history['val_loss'])
 plot_acc(history_obj.history['acc'], history_obj.history['val_acc'])
