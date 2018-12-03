@@ -3,6 +3,7 @@
 from keras.models import load_model
 from keras import optimizers, models
 from keras.preprocessing import image
+from keras.applications.vgg19 import preprocess_input, decode_predictions
 import numpy as np
 import sys
 
@@ -14,7 +15,7 @@ def run(image_name):
     model = 'VGG19'
 
     # model weights
-    weights_path = "saved_models/VGG19.h5"
+    weights_path = "D:\\diabetes\\saved_models\\VGG19.h5"
 
     # testing data directory
     test_data_dir = model + '/testing/'
@@ -28,20 +29,11 @@ def run(image_name):
     img = image.load_img(image_name, target_size=(img_width, img_height))
     x = image.img_to_array(img)
     x = np.expand_dims(x, axis=0)
+    x = preprocess_input(x)
 
     images = np.vstack([x])
-    classes = model.predict_classes(images, batch_size=10)
-
-    if (classes[0] == 0):
-        print "\n"
-        print image_name
-        print "hemorrhage detected"
-        print "\n"
-    elif (classes[0] == 1):
-        print "\n"
-        print image_name
-        print "no hemorrhage detected"
-        print "\n"
+    classes = model.predict(images, batch_size=10)
+    print ("predicted: ", classes)
 
     #print classes
     # predicting multiple images at once

@@ -55,8 +55,7 @@ num_classes = 2
 # model.add(VGG19(include_top=False, pooling='avg', weights='imagenet', input_shape=input_shape))
 # model.layers[0].trainable = False
 
-
-vgg19 = VGG19(VGG19(include_top=False, pooling='avg', weights='imagenet', input_shape=input_shape))
+vgg19 = VGG19(include_top=False, pooling='avg', weights='imagenet', input_shape=input_shape)
 
 vgg19.get_layer('block1_conv1').trainable = False
 vgg19.get_layer('block1_conv2').trainable = False
@@ -84,16 +83,18 @@ vgg19.get_layer('block5_conv3').trainable = True
 vgg19.get_layer('block5_conv4').trainable = True
 vgg19.get_layer('block5_pool').trainable = True
 
+
 x = vgg19.get_layer('block5_pool').output
 x = Flatten(name='flatten')(x)
-x = Dense(1024, activation='relu')(x)
-x = Dense(1024, activation='relu')(x)
+x = Dense(256, activation='relu')(x)
+x = Dropout(0.2)(x)
+x = Dense(256, activation='relu')(x)
 x = Dense(num_classes, activation='softmax', name='prediction')(x)
 
 model = Model(vgg19.input, x)
 
 # Compile Model
-adam = optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=True)
+adam = optimizers.Adam(lr=0.0001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.1, amsgrad=True)
 model.compile(optimizer=adam, loss='categorical_crossentropy', metrics=['accuracy'])
 
 # show the model summary
