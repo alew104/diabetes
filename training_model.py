@@ -44,7 +44,7 @@ validation_data_dir = model + '/validation/'
 test_data_dir = model + '/testing/'
 
 epochs = 50
-batch_size = 32
+batch_size = 16
 input_shape = (img_width, img_height, 3)
 # two classes: hemorrages or no hemorrhages
 num_classes = 2
