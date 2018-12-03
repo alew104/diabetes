@@ -43,8 +43,8 @@ train_data_dir = model + '/training/'
 validation_data_dir = model + '/validation/'
 test_data_dir = model + '/testing/'
 
-epochs = 50
-batch_size = 16
+epochs = 100
+batch_size = 32
 input_shape = (img_width, img_height, 3)
 # two classes: hemorrages or no hemorrhages
 num_classes = 2
@@ -92,7 +92,7 @@ x = Dense(num_classes, activation='softmax')(x)
 model = Model(vgg19.input, x)
 
 # Compile Model
-adam = optimizers.Adam(lr=0.01, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=True)
+adam = optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=True)
 model.compile(optimizer=adam, loss='categorical_crossentropy', metrics=['accuracy'])
 
 # show the model summary
