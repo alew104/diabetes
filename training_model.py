@@ -49,12 +49,6 @@ input_shape = (img_width, img_height, 3)
 # two classes: hemorrages or no hemorrhages
 num_classes = 2
 
-
-# keras vgg 19
-# model = Sequential()
-# model.add(VGG19(include_top=False, pooling='avg', weights='imagenet', input_shape=input_shape))
-# model.layers[0].trainable = False
-
 vgg19 = VGG19(include_top=False, pooling='avg', weights='imagenet', input_shape=input_shape)
 
 vgg19.get_layer('block1_conv1').trainable = False
@@ -68,33 +62,35 @@ vgg19.get_layer('block2_pool').trainable = False
 vgg19.get_layer('block3_conv1').trainable = False
 vgg19.get_layer('block3_conv2').trainable = False
 vgg19.get_layer('block3_conv3').trainable = False
-vgg19.get_layer('block3_conv4').trainable = True
-vgg19.get_layer('block3_pool').trainable = True
+vgg19.get_layer('block3_conv4').trainable = False
+vgg19.get_layer('block3_pool').trainable = False
 
 vgg19.get_layer('block4_conv1').trainable = True
 vgg19.get_layer('block4_conv2').trainable = True
 vgg19.get_layer('block4_conv3').trainable = True
 vgg19.get_layer('block4_conv4').trainable = True
-vgg19.get_layer('block4_pool').trainable = True
+vgg19.get_layer('block4_pool').trainable = False
 
 vgg19.get_layer('block5_conv1').trainable = True
 vgg19.get_layer('block5_conv2').trainable = True
 vgg19.get_layer('block5_conv3').trainable = True
 vgg19.get_layer('block5_conv4').trainable = True
-vgg19.get_layer('block5_pool').trainable = True
+vgg19.get_layer('block5_pool').trainable = False
 
 
 x = vgg19.get_layer('block5_pool').output
 x = Flatten(name='flatten')(x)
+x = Dense(512, activation='relu')(x)
+x = Dropout(0.8)(x)
 x = Dense(256, activation='relu')(x)
-x = Dropout(0.2)(x)
-x = Dense(256, activation='relu')(x)
+x = Dropout(0.4)(x)
 x = Dense(num_classes, activation='softmax', name='prediction')(x)
 
 model = Model(vgg19.input, x)
 
+
 # Compile Model
-adam = optimizers.Adam(lr=0.0001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.1, amsgrad=True)
+adam = optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.1, amsgrad=True)
 model.compile(optimizer=adam, loss='categorical_crossentropy', metrics=['accuracy'])
 
 # show the model summary
