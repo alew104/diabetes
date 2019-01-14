@@ -49,46 +49,55 @@ input_shape = (img_width, img_height, 3)
 # two classes: hemorrages or no hemorrhages
 num_classes = 2
 
-vgg19 = VGG19(include_top=False, pooling='avg', weights='imagenet', input_shape=input_shape)
+model = Sequential()
+model.add(ZeroPadding2D((1, 1), input_shape=input_shape))
+model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(64, (3, 3), activation='relu'))
+model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
-vgg19.get_layer('block1_conv1').trainable = False
-vgg19.get_layer('block1_conv2').trainable = False
-vgg19.get_layer('block1_pool').trainable = False
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(128, (3, 3), activation='relu'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(128, (3, 3), activation='relu'))
+model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
-vgg19.get_layer('block2_conv1').trainable = False
-vgg19.get_layer('block2_conv2').trainable = False
-vgg19.get_layer('block2_pool').trainable = False
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(256, (3, 3), activation='relu'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(256, (3, 3), activation='relu'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(256, (3, 3), activation='relu'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(256, (3, 3), activation='relu'))
+model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
-vgg19.get_layer('block3_conv1').trainable = False
-vgg19.get_layer('block3_conv2').trainable = False
-vgg19.get_layer('block3_conv3').trainable = False
-vgg19.get_layer('block3_conv4').trainable = False
-vgg19.get_layer('block3_pool').trainable = False
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(512, (3, 3), activation='relu'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(512, (3, 3), activation='relu'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(512, (3, 3), activation='relu'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(512, (3, 3), activation='relu'))
+model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
-vgg19.get_layer('block4_conv1').trainable = True
-vgg19.get_layer('block4_conv2').trainable = True
-vgg19.get_layer('block4_conv3').trainable = True
-vgg19.get_layer('block4_conv4').trainable = True
-vgg19.get_layer('block4_pool').trainable = False
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(512, (3, 3), activation='relu'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(512, (3, 3), activation='relu'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(512, (3, 3), activation='relu'))
+model.add(ZeroPadding2D((1, 1)))
+model.add(Conv2D(512, (3, 3), activation='relu'))
+model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
-vgg19.get_layer('block5_conv1').trainable = True
-vgg19.get_layer('block5_conv2').trainable = True
-vgg19.get_layer('block5_conv3').trainable = True
-vgg19.get_layer('block5_conv4').trainable = True
-vgg19.get_layer('block5_pool').trainable = False
-
-
-x = vgg19.get_layer('block5_pool').output
-x = Flatten(name='flatten')(x)
-x = Dense(512, activation='relu')(x)
-x = Dropout(0.8)(x)
-x = Dense(256, activation='relu')(x)
-x = Dropout(0.4)(x)
-x = Dense(num_classes, activation='softmax', name='prediction')(x)
-
-model = Model(vgg19.input, x)
-
-
+model.add(Flatten())
+#model.add(Dense(512, activation='relu'))
+#model.add(Dropout(0.4))
+model.add(Dense(256, activation='relu'))
+model.add(Dropout(0.2))
+model.add(Dense(num_classes, activation='softmax', name='prediction'))
 # Compile Model
 adam = optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.1, amsgrad=True)
 model.compile(optimizer=adam, loss='categorical_crossentropy', metrics=['accuracy'])
@@ -130,7 +139,7 @@ history_obj = model.fit_generator(
             steps_per_epoch=batch_size,
             epochs=epochs,
             validation_data=validation_generator,
-            validation_steps=2)
+            validation_steps=87)
 
 model.save('saved_models/' + layers + '.h5')
 
